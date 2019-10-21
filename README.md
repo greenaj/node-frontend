@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/greenaj/node-frontend.svg?branch=master)](https://travis-ci.org/greenaj/node-frontend)
-
 ## Supported tags and respective `Dockerfile` links
 
 * [`10`, `latest` _(Dockerfile)_](https://github.com/greenaj/node-frontend/blob/master/Dockerfile)
