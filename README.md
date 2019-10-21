@@ -1,24 +1,35 @@
-[![Build Status](https://travis-ci.org/tiangolo/node-frontend.svg?branch=master)](https://travis-ci.org/tiangolo/node-frontend)
+[![Build Status](https://travis-ci.org/greenaj/node-frontend.svg?branch=master)](https://travis-ci.org/greenaj/node-frontend)
 
 ## Supported tags and respective `Dockerfile` links
 
-* [`10`, `latest` _(Dockerfile)_](https://github.com/tiangolo/node-frontend/blob/master/Dockerfile)
+* [`10`, `latest` _(Dockerfile)_](https://github.com/greenaj/node-frontend/blob/master/Dockerfile)
 
 # Node.js frontend development with Chrome Headless tests
 
+This Docker image is forked from [tiangolo/node-frontend](https://github.com/tiangolo/node-frontend), for more about the original author see [tiangolo (Sebastián Ramírez)](https://github.com/tiangolo).
+
 This Docker image simplifies the process of creating a full Node.js environment for frontend development with multistage building.
 
-It includes all the dependencies for Puppeteer, so you can just `npm install puppeteer` and it should work.
+The main aspects about this project from the original project:
 
-It also includes a default Nginx configuration for your frontend application, so in multi-stage Docker builds you can just copy it to an Ngnix "stage" and have an always freshly compiled production ready frontend Docker image for deployment.
+- Puppeteer is not installed, just its dependencies. Install puppeteer in your Node project.
+- The version of Node.js is updated to keep pace with the latest stable (LTS) version released.
+- The default.conf file is updated to keep pace with the docker container released for latest stable version of NGINX [nginx - Docker Hub](https://hub.docker.com/_/nginx).
 
-It is derivated from this article I wrote:
+The main similaries from the original project:
+
+- Includes a default Nginx configuration for your frontend application, in multi-stage Docker builds you can copy it to an Ngnix "stage". In this version, it keeps the original name `default.conf`. The orinal project used `nginx.conf` foir the file name though.
+
+
+## Articles From Previous Auther
 
 > Angular in Docker with Nginx, supporting configurations / environments, built with multi-stage Docker builds and testing with Chrome Headless
 
  [in Medium](https://medium.com/@tiangolo/angular-in-docker-with-nginx-supporting-environments-built-with-multi-stage-docker-builds-bb9f1724e984), and [in GitHub](https://github.com/tiangolo/medium-posts/tree/master/angular-in-docker)
 
- ## How to use
+## How to use
+
+_Most of the documentation below comes from the original project:_
 
 ### Previous steps
 
@@ -44,7 +55,7 @@ npm install --save-dev puppeteer
 
 ```Dockerfile
 # Stage 0, "build-stage", based on Node.js, to build and compile the frontend
-FROM tiangolo/node-frontend:10 as build-stage
+FROM greenaj/node-frontend:10 as build-stage
 
 ...
 
@@ -134,8 +145,9 @@ RUN npm run build -- --output-path=./dist/out --configuration $configuration
 ```Dockerfile
 ...
 
-# Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
-FROM nginx:1.15
+# Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx.
+# You may wish to adjust the tag for the version of NGINX though.
+FROM nginx:1.16
 
 ...
 ```
@@ -157,7 +169,7 @@ COPY --from=build-stage /app/dist/out/ /usr/share/nginx/html
 ```Dockerfile
 ...
 
-COPY --from=build-stage /nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build-stage /default.conf /etc/nginx/conf.d/default.conf
 
 ...
 ```
@@ -166,7 +178,7 @@ COPY --from=build-stage /nginx.conf /etc/nginx/conf.d/default.conf
 
 ```Dockerfile
 # Stage 0, "build-stage", based on Node.js, to build and compile the frontend
-FROM tiangolo/node-frontend:10 as build-stage
+FROM greenaj/node-frontend:10 as build-stage
 
 WORKDIR /app
 
@@ -184,11 +196,11 @@ RUN npm run build -- --output-path=./dist/out --configuration $configuration
 
 
 # Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
-FROM nginx:1.15
+FROM nginx:1.16
 
 COPY --from=build-stage /app/dist/out/ /usr/share/nginx/html
 
-COPY --from=build-stage /nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build-stage /default.conf /etc/nginx/conf.d/default.conf
 ```
 
 ### Building the Docker image
@@ -236,53 +248,6 @@ It's faster and simpler to develop locally. But once you think you got it, build
 ## Advanced Nginx configuration
 
 You can include more Nginx configurations by copying them to `/etc/nginx/conf.d/`, beside the included Nginx configuration.
-
-By default, this Nginx configuration routes everything to your frontend app (to your `index.html`). But if you want some specific routes to instead return, for example, an HTTP 404 "Not Found" error, you can include more nginx `.conf` files in the directory: `/etc/nginx/extra-conf.d/`.
-
-For example, if you want your final Nginx to send 404 errors to `/api` and `/docs` you can create a file `nginx-backend-not-found.conf:
-
-```Nginx
-location /api {
-    return 404;
-}
-location /docs {
-    return 404;
-}
-```
-
-And in your `Dockerfile` add a line:
-
-```Dockerfile
-COPY ./nginx-backend-not-found.conf /etc/nginx/extra-conf.d/nginx-backend-not-found.conf
-```
-
-### Details
-
-These files will be included inside of an "[Nginx `server` directive](https://nginx.org/en/docs/http/ngx_http_core_module.html#server)".
-
-So, you have to put contents that can be included there, like `location`.
-
----
-
-This functionality was made to solve a very specific but common use case:
-
-Let's say you have a load balancer on top of your frontend (and probably backend too), and it sends everything that goes to `/api/` to the backend, and `/docs` to an API documentation site (handled by the backend or other service), and the rest, `/`, to your frontend.
-
-And your frontend has long-term caching for your main frontend app (as would be normal).
-
-And then at some point, during development or because of a bug, your backend, that serves `/docs` is down.
-
-You try to go there, but because it's down, your load balancer falls back to what handles `/`, your frontend.
-
-So, you only see your same frontend instead of the `/docs`.
-
-Then you check the logs in your backend, you fix it, and try to load `/docs` again.
-
-But because the frontend had long-term caching, it still shows your same frontend at `/docs`, even though your backend is back online. Then you have to load it in an incognito window, or fiddle with the local cache of your frontend, etc.
-
-By making Nginx simply respond with 404 errors when requested for `/docs`, you avoid that problem.
-
-And because you have a load balancer on top, redirecting requests to `/docs` to the correct service, Nginx would never actually return that 404. Only in the case of a failure, or during development.
 
 ## License
 
