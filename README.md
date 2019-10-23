@@ -27,7 +27,7 @@ The main similaries from the original project:
 
 ## How to use
 
-_Most of the documentation below comes from the original project:_
+_Most of the documentation below comes from the original project, being created by the origin author:_
 
 ### Previous steps
 
