@@ -1,6 +1,6 @@
 ## Supported tags and respective `Dockerfile` links
 
-* [`10`, `latest` _(Dockerfile)_](https://github.com/greenaj/node-frontend/blob/master/Dockerfile)
+* [`10`, `12`, latest` _(Dockerfile)_](https://github.com/greenaj/node-frontend/blob/master/Dockerfile)
 
 # Node.js frontend development with Chrome Headless tests
 
@@ -53,7 +53,7 @@ npm install --save-dev puppeteer
 
 ```Dockerfile
 # Stage 0, "build-stage", based on Node.js, to build and compile the frontend
-FROM greenaj/node-frontend:10 as build-stage
+FROM greenaj/node-frontend:12 as build-stage
 
 ...
 
@@ -176,7 +176,7 @@ COPY --from=build-stage /default.conf /etc/nginx/conf.d/default.conf
 
 ```Dockerfile
 # Stage 0, "build-stage", based on Node.js, to build and compile the frontend
-FROM greenaj/node-frontend:10 as build-stage
+FROM greenaj/node-frontend:12 as build-stage
 
 WORKDIR /app
 
@@ -239,7 +239,7 @@ npm run start
 
 It's faster and simpler to develop locally. But once you think you got it, build your Docker image and try it. You will see how it looks in the full production environment.
 
-* If you want to have Chrome Headless tests, run them locally first, as you normally would (Karma, Jasmine, Jest, etc). Using the live normal browser. Make sure you have all the configurations right. Then install Puppeteer locally and make sure it runs locally (with local Headless Chrome). Once you know it is running locally, you can add that to your `Dockerfile` and have "continuous integration" and "continuous building"... and if you want add "continuous deployment". But first make it run locally, it's easier to debug only one step at a time.
+* If you want to have Chrome Headless tests, run them locally first, as you normally would (Karma, Jasmine, Jest, etc). Using the live normal browser. Make sure you have all the configurations right. Then install git peteer locally and make sure it runs locally (with local Headless Chrome). Once you know it is running locally, you can add that to your `Dockerfile` and have "continuous integration" and "continuous building"... and if you want add "continuous deployment". But first make it run locally, it's easier to debug only one step at a time.
 
 * Have fun.
 
