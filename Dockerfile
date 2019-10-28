@@ -1,4 +1,5 @@
-FROM node:12
+ARG NodeMajor=12
+FROM node:${NodeMajor}
 
 
 # Puppeteer dependencies, from: https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#running-puppeteer-in-docker
