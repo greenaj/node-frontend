@@ -5,7 +5,7 @@ set -x
 
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
-DockerTag="${NodeMajor}-test"
+DockerTag="${NodeMajor}"
 
 docker build -t "greenaj/node-frontend:${DockerTag}" --build-arg NodeMajor=$NodeMajor .
 
