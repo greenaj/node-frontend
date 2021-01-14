@@ -7,7 +7,8 @@ languarge: bash
 
 env:
   - NodeMajor=12
-  - NodeMajor=10
+  - NodeMajor=14
+  - NodeMajor=15
 
 script:
   - echo "Not implemented"

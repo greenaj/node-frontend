@@ -1,6 +1,6 @@
 ## Supported tags and respective `Dockerfile` links
 
-* [`10`, `12`, latest` _(Dockerfile)_](https://github.com/greenaj/node-frontend/blob/master/Dockerfile)
+* [`10`, `12`, `14`, `15`,  _(Dockerfile)_](https://github.com/greenaj/node-frontend/blob/master/Dockerfile)
 
 # Node.js frontend development with Chrome Headless tests
 
