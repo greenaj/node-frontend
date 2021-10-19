@@ -6,9 +6,8 @@ services:
 languarge: bash 
 
 env:
-  - NodeMajor=12
   - NodeMajor=14
-  - NodeMajor=15
+  - NodeMajor=17
 
 script:
   - echo "Not implemented"
