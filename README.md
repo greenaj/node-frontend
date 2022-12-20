@@ -1,6 +1,6 @@
 ## Supported tags and respective `Dockerfile` links
 
-* [`10`, `12`, `14`, `15`,  _(Dockerfile)_](https://github.com/greenaj/node-frontend/blob/master/Dockerfile)
+* [`14`, `16`, `17`,  _(Dockerfile)_](https://github.com/greenaj/node-frontend/blob/master/Dockerfile)
 
 # Node.js frontend development with Chrome Headless tests
 
@@ -19,7 +19,7 @@ The main similaries from the original project:
 - Includes a default Nginx configuration for your frontend application, in multi-stage Docker builds you can copy it to an Ngnix "stage". In this version, it keeps the original name `default.conf`. The orinal project used `nginx.conf` foir the file name though.
 
 
-## Articles From Previous Auther
+## Articles From Previous Author
 
 > Angular in Docker with Nginx, supporting configurations / environments, built with multi-stage Docker builds and testing with Chrome Headless
 
