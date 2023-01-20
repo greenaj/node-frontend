@@ -6,8 +6,9 @@ services:
 languarge: bash 
 
 env:
-  - NodeMajor=18
-  - NodeMajor=19
+  - NodeVersion=18.12.1
+  - NodeVersion=18.13.0
+  - NodeVersion=19.14.0
 
 script:
   - echo "Not implemented"
